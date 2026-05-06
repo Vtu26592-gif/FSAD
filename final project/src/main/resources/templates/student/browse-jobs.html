@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/><title>Browse Jobs - Student</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:#f5f7fa;display:flex;min-height:100vh}
+.sidebar{width:220px;background:#1565c0;color:white;padding:1.5rem 0;position:fixed;height:100vh}
+.sidebar .logo{padding:0 1.5rem 1.5rem;font-size:1.1rem;font-weight:bold;border-bottom:1px solid rgba(255,255,255,.2)}
+.sidebar nav a{display:block;padding:.75rem 1.5rem;color:#bbdefb;text-decoration:none;font-size:.9rem}
+.sidebar nav a:hover,.sidebar nav a.active{background:rgba(255,255,255,.15);color:white}
+.main{margin-left:220px;padding:2rem;flex:1}
+h1{color:#1565c0;margin-bottom:1.5rem}
+.search-bar{background:white;padding:1.2rem;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:1.5rem;display:flex;flex-wrap:wrap;gap:.75rem;align-items:flex-end}
+.search-bar .field{display:flex;flex-direction:column;gap:.3rem;min-width:160px}
+.search-bar label{font-size:.8rem;font-weight:600;color:#555}
+.search-bar input,.search-bar select{padding:.55rem .8rem;border:1px solid #ddd;border-radius:6px;font-size:.9rem}
+.btn-search{padding:.6rem 1.2rem;background:#1565c0;color:white;border:none;border-radius:6px;font-weight:bold;cursor:pointer}
+.btn-reset{padding:.6rem 1rem;background:#eee;color:#555;border:none;border-radius:6px;cursor:pointer;text-decoration:none;font-size:.88rem;display:inline-flex;align-items:center}
+.job-card{background:white;border-radius:10px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:1rem;display:flex;justify-content:space-between;border-left:4px solid #1565c0}
+.job-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.12)}
+.job-info h3{color:#1565c0;margin-bottom:.3rem}
+.company{font-weight:600;color:#333;font-size:.95rem}
+.meta{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0;font-size:.8rem;color:#666}
+.tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem}
+.tag{padding:.18rem .55rem;border-radius:20px;font-size:.75rem;background:#e3f2fd;color:#1565c0}
+.tag-type{background:#fce4ec;color:#880e4f}
+.tag-exp{background:#e8f5e9;color:#2e7d32}
+.actions{display:flex;flex-direction:column;gap:.5rem;align-items:flex-end;min-width:110px}
+.btn{display:inline-block;padding:.5rem 1rem;border-radius:6px;text-decoration:none;font-weight:bold;font-size:.82rem;text-align:center;border:none;cursor:pointer}
+.btn-primary{background:#1565c0;color:white}
+.btn-outline{border:1px solid #1565c0;color:#1565c0;background:white}
+.salary{color:#2e7d32;font-weight:600;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="sidebar">
+  <div class="logo">💼 JobPortal</div>
+  <nav>
+    <a th:href="@{/student/dashboard}">🏠 Dashboard</a>
+    <a th:href="@{/student/jobs}" class="active">🔍 Browse Jobs</a>
+    <a th:href="@{/student/applications}">📋 My Applications</a>
+    <a th:href="@{/student/profile}">👤 My Profile</a>
+    <a th:href="@{/logout}" style="margin-top:2rem;border-top:1px solid rgba(255,255,255,.2);padding-top:.75rem">🚪 Logout</a>
+  </nav>
+</div>
+<div class="main">
+  <h1>🔍 Browse Jobs</h1>
+  <form th:action="@{/student/jobs}" method="get" class="search-bar">
+    <div class="field">
+      <label>Keyword</label>
+      <input type="text" name="keyword" th:value="${keyword}" placeholder="Title, skill..."/>
+    </div>
+    <div class="field">
+      <label>Category</label>
+      <select name="category">
+        <option value="">All</option>
+        <option value="IT" th:selected="${category=='IT'}">IT</option>
+        <option value="Finance" th:selected="${category=='Finance'}">Finance</option>
+        <option value="Marketing" th:selected="${category=='Marketing'}">Marketing</option>
+        <option value="HR" th:selected="${category=='HR'}">HR</option>
+        <option value="Healthcare" th:selected="${category=='Healthcare'}">Healthcare</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Location</label>
+      <input type="text" name="location" th:value="${location}" placeholder="City or Remote"/>
+    </div>
+    <div class="field">
+      <label>Experience</label>
+      <select name="experience">
+        <option value="">Any</option>
+        <option value="Fresher" th:selected="${experience=='Fresher'}">Fresher</option>
+        <option value="1-2 years" th:selected="${experience=='1-2 years'}">1-2 years</option>
+        <option value="3-5 years" th:selected="${experience=='3-5 years'}">3-5 years</option>
+      </select>
+    </div>
+    <button type="submit" class="btn-search">Search</button>
+    <a th:href="@{/student/jobs}" class="btn-reset">Reset</a>
+  </form>
+
+  <p style="color:#666;margin-bottom:1rem;font-size:.9rem" th:text="${#lists.size(jobs)} + ' jobs found'"></p>
+
+  <div th:each="job : ${jobs}" class="job-card">
+    <div class="job-info">
+      <h3 th:text="${job.title}"></h3>
+      <div class="company" th:text="${job.companyName}"></div>
+      <div class="meta">
+        <span>📍 <span th:text="${job.location}"></span></span>
+        <span class="salary">💰 <span th:text="${job.salaryRange ?: 'Not disclosed'}"></span></span>
+        <span>📅 Last date: <span th:text="${job.lastDateToApply}"></span></span>
+      </div>
+      <div class="tags">
+        <span class="tag tag-type" th:text="${job.jobType}"></span>
+        <span class="tag tag-exp" th:text="${job.experienceRequired}"></span>
+        <span class="tag" th:text="${job.category}"></span>
+      </div>
+    </div>
+    <div class="actions">
+      <a th:href="@{/student/jobs/{id}/apply(id=${job.id})}" class="btn btn-primary">Apply Now</a>
+      <a th:href="@{/jobs/{id}(id=${job.id})}" class="btn btn-outline">Details</a>
+    </div>
+  </div>
+  <div th:if="${#lists.isEmpty(jobs)}" style="text-align:center;padding:3rem;background:white;border-radius:10px;color:#999">
+    No jobs found. Try different filters.
+  </div>
+</div>
+</body>
+</html>

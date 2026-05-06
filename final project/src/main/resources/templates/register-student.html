@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/><title>Student Register - JobPortal</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:#f5f7fa}
+nav{background:#1565c0;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center}
+nav a{color:white;text-decoration:none;font-weight:bold}
+.container{max-width:600px;margin:2rem auto;background:white;padding:2rem;border-radius:10px;box-shadow:0 2px 12px rgba(0,0,0,.1)}
+h1{color:#1565c0;margin-bottom:1.5rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-group{margin-bottom:1.1rem}
+label{display:block;font-weight:600;margin-bottom:.3rem;font-size:.88rem;color:#444}
+input,select{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;font-size:.93rem}
+input:focus,select:focus{outline:none;border-color:#1565c0}
+.error{color:#c62828;font-size:.8rem;margin-top:.2rem}
+.btn{padding:.75rem 2rem;background:#1565c0;color:white;border:none;border-radius:6px;font-size:1rem;font-weight:bold;cursor:pointer}
+.btn:hover{background:#0d47a1}
+.link{color:#1565c0;text-decoration:none;font-size:.88rem}
+</style>
+</head>
+<body>
+<nav><a th:href="@{/}">💼 JobPortal</a><a th:href="@{/login}">Login</a></nav>
+<div class="container">
+  <h1>🎓 Student Registration</h1>
+  <form th:action="@{/register/student}" th:object="${user}" method="post">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Full Name *</label>
+        <input type="text" th:field="*{fullName}" placeholder="Your full name"/>
+        <div class="error" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></div>
+      </div>
+      <div class="form-group">
+        <label>Email *</label>
+        <input type="email" th:field="*{email}" placeholder="you@email.com"/>
+        <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Password *</label>
+        <input type="password" th:field="*{password}" placeholder="Min 6 characters"/>
+        <div class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+      </div>
+      <div class="form-group">
+        <label>Phone</label>
+        <input type="text" th:field="*{phone}" placeholder="10-digit mobile"/>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Location</label>
+        <input type="text" th:field="*{location}" placeholder="City, State"/>
+      </div>
+      <div class="form-group">
+        <label>Experience</label>
+        <select th:field="*{experience}">
+          <option value="">-- Select --</option>
+          <option value="Fresher">Fresher</option>
+          <option value="1-2 years">1-2 years</option>
+          <option value="3-5 years">3-5 years</option>
+          <option value="5+ years">5+ years</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Skills (comma separated)</label>
+      <input type="text" th:field="*{skills}" placeholder="Java, Spring Boot, MySQL..."/>
+    </div>
+    <div class="form-group">
+      <label>Education</label>
+      <input type="text" th:field="*{education}" placeholder="B.Tech CSE, 2024"/>
+    </div>
+    <button type="submit" class="btn">Register as Student</button>
+    &nbsp; <a th:href="@{/register}" class="link">← Change role</a>
+  </form>
+</div>
+</body>
+</html>

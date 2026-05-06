@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/><title>Error - JobPortal</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:#f5f7fa;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.card{background:white;border-radius:12px;padding:3rem;text-align:center;max-width:480px;width:90%;box-shadow:0 4px 24px rgba(0,0,0,.12)}
+.icon{font-size:4rem;margin-bottom:1rem}
+h1{color:#c62828;margin-bottom:.75rem;font-size:1.5rem}
+p{color:#666;margin-bottom:2rem;line-height:1.6}
+.error-msg{background:#ffebee;border:1px solid #ef9a9a;color:#c62828;padding:.9rem 1rem;border-radius:6px;margin-bottom:1.5rem;font-size:.9rem;text-align:left}
+.actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-block;padding:.7rem 1.4rem;border-radius:6px;text-decoration:none;font-weight:bold;font-size:.9rem}
+.btn-primary{background:#1565c0;color:white}
+.btn-back{background:#eee;color:#555}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="icon">⚠️</div>
+  <h1>Something Went Wrong</h1>
+  <p>An error occurred while processing your request.</p>
+  <div class="error-msg" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+  <div class="actions">
+    <a href="javascript:history.back()" class="btn btn-back">← Go Back</a>
+    <a th:href="@{/}" class="btn btn-primary">🏠 Home</a>
+  </div>
+</div>
+</body>
+</html>

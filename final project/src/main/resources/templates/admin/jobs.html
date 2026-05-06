@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/><title>Manage Jobs - Admin</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:#f5f7fa;display:flex;min-height:100vh}
+.sidebar{width:220px;background:#212121;color:white;padding:1.5rem 0;position:fixed;height:100vh}
+.sidebar .logo{padding:0 1.5rem 1.5rem;font-size:1.1rem;font-weight:bold;border-bottom:1px solid rgba(255,255,255,.15)}
+.sidebar nav a{display:block;padding:.75rem 1.5rem;color:#bdbdbd;text-decoration:none;font-size:.9rem}
+.sidebar nav a:hover,.sidebar nav a.active{background:rgba(255,255,255,.1);color:white}
+.main{margin-left:220px;padding:2rem;flex:1}
+h1{color:#212121;margin-bottom:1.5rem}
+.card{background:white;border-radius:10px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+table{width:100%;border-collapse:collapse}
+th{background:#f5f7fa;color:#555;padding:.7rem 1rem;text-align:left;font-size:.8rem;text-transform:uppercase;letter-spacing:.4px}
+td{padding:.75rem 1rem;border-bottom:1px solid #f0f0f0;font-size:.88rem;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+.badge{padding:.2rem .6rem;border-radius:20px;font-size:.73rem;font-weight:600}
+.badge-ACTIVE{background:#e8f5e9;color:#2e7d32}
+.badge-CLOSED{background:#ffebee;color:#c62828}
+.badge-DRAFT{background:#fff3e0;color:#e65100}
+.btn{display:inline-block;padding:.35rem .8rem;border-radius:5px;font-size:.8rem;font-weight:bold;border:none;cursor:pointer}
+.btn-red{background:#c62828;color:white}
+.alert-success{background:#e8f5e9;color:#2e7d32;padding:.75rem;border-radius:6px;margin-bottom:1rem}
+.search-bar{display:flex;gap:.75rem;margin-bottom:1.5rem;align-items:center;flex-wrap:wrap}
+.search-bar input{padding:.55rem .9rem;border:1px solid #ddd;border-radius:6px;font-size:.9rem;min-width:250px}
+.search-bar select{padding:.55rem .9rem;border:1px solid #ddd;border-radius:6px;font-size:.9rem}
+.count{color:#666;font-size:.88rem}
+</style>
+<script>
+function liveSearch() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  document.querySelectorAll('tbody tr').forEach(row => {
+    row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+</script>
+</head>
+<body>
+<div class="sidebar">
+  <div class="logo">⚙️ Admin Panel</div>
+  <nav>
+    <a th:href="@{/admin/dashboard}">📊 Dashboard</a>
+    <a th:href="@{/admin/users}">👥 Manage Users</a>
+    <a th:href="@{/admin/jobs}" class="active">💼 Manage Jobs</a>
+    <a th:href="@{/}">🌐 View Site</a>
+    <a th:href="@{/logout}" style="margin-top:2rem;border-top:1px solid rgba(255,255,255,.1);padding-top:.75rem">🚪 Logout</a>
+  </nav>
+</div>
+
+<div class="main">
+  <h1>💼 Manage All Jobs</h1>
+  <div th:if="${success}" class="alert-success" th:text="${success}"></div>
+
+  <div class="search-bar">
+    <input id="searchInput" type="text" placeholder="🔍 Search by title, company, category..." oninput="liveSearch()"/>
+    <span class="count" th:text="${#lists.size(jobs)} + ' total jobs'"></span>
+  </div>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Job Title</th>
+          <th>Company</th>
+          <th>Category</th>
+          <th>Location</th>
+          <th>Type</th>
+          <th>Experience</th>
+          <th>Posted</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="job, stat : ${jobs}">
+          <td th:text="${stat.count}"></td>
+          <td>
+            <strong th:text="${job.title}"></strong><br/>
+            <span style="font-size:.76rem;color:#888" th:text="${job.employer != null ? 'by ' + job.employer.fullName : ''}"></span>
+          </td>
+          <td th:text="${job.companyName}"></td>
+          <td th:text="${job.category}"></td>
+          <td th:text="${job.location}"></td>
+          <td th:text="${job.jobType}"></td>
+          <td th:text="${job.experienceRequired}"></td>
+          <td th:text="${job.postedAt != null ? #temporals.format(job.postedAt, 'dd MMM yy') : '—'}"></td>
+          <td>
+            <span class="badge" th:classappend="'badge-' + ${job.status.name()}" th:text="${job.status}"></span>
+          </td>
+          <td>
+            <form th:action="@{/admin/jobs/delete/{id}(id=${job.id})}" method="post"
+                  onsubmit="return confirm('Remove this job permanently?')">
+              <button type="submit" class="btn btn-red">Remove</button>
+            </form>
+          </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(jobs)}">
+          <td colspan="10" style="text-align:center;color:#999;padding:2rem">No jobs found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

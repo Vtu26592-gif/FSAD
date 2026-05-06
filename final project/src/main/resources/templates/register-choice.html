@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/><title>Register - JobPortal</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:#1565c0;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.container{text-align:center;color:white}
+.container h1{font-size:2rem;margin-bottom:.5rem}
+.container p{opacity:.85;margin-bottom:2.5rem}
+.cards{display:flex;gap:2rem;flex-wrap:wrap;justify-content:center}
+.card{background:white;border-radius:12px;padding:2.5rem 2rem;width:240px;cursor:pointer;text-decoration:none;transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.3)}
+.card .icon{font-size:3rem;margin-bottom:1rem}
+.card h2{color:#1565c0;margin-bottom:.5rem}
+.card p{color:#666;font-size:.88rem}
+.back{display:inline-block;margin-top:2rem;color:#bbdefb;text-decoration:none;font-size:.9rem}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Join JobPortal</h1>
+  <p>Choose how you want to register</p>
+  <div class="cards">
+    <a th:href="@{/register/student}" class="card">
+      <div class="icon">🎓</div>
+      <h2>Job Seeker</h2>
+      <p>Find jobs, upload resume, track applications</p>
+    </a>
+    <a th:href="@{/register/employer}" class="card">
+      <div class="icon">🏢</div>
+      <h2>Employer</h2>
+      <p>Post jobs, view applicants, hire talent</p>
+    </a>
+  </div>
+  <a th:href="@{/login}" class="back">Already have an account? Login →</a>
+</div>
+</body>
+</html>

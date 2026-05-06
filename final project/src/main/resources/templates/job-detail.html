@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/><title th:text="${job.title} + ' - JobPortal'">Job Detail</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:#f5f7fa}
+nav{background:#1565c0;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center}
+nav a{color:white;text-decoration:none;margin-left:1rem;font-size:.9rem}
+nav .brand{font-weight:bold;font-size:1.1rem}
+.container{max-width:850px;margin:2rem auto;padding:0 1rem}
+.card{background:white;border-radius:10px;padding:2rem;box-shadow:0 2px 12px rgba(0,0,0,.1)}
+.job-header{border-bottom:1px solid #eee;padding-bottom:1.5rem;margin-bottom:1.5rem}
+.job-header h1{color:#1565c0;font-size:1.7rem;margin-bottom:.5rem}
+.company{font-size:1.1rem;font-weight:600;color:#333}
+.meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin:1.2rem 0;background:#f5f7fa;padding:1rem;border-radius:8px}
+.meta-item{display:flex;flex-direction:column}
+.meta-item .label{font-size:.75rem;color:#888;text-transform:uppercase;letter-spacing:.5px}
+.meta-item .value{font-weight:600;color:#333;margin-top:.2rem}
+.section-title{font-size:1rem;font-weight:700;color:#1565c0;margin:1.2rem 0 .6rem;text-transform:uppercase;letter-spacing:.5px}
+.description{color:#555;line-height:1.7;font-size:.95rem}
+.skills{display:flex;flex-wrap:wrap;gap:.5rem;margin:.5rem 0}
+.skill-tag{background:#e3f2fd;color:#1565c0;padding:.3rem .7rem;border-radius:20px;font-size:.82rem}
+.btn{display:inline-block;padding:.75rem 1.5rem;border-radius:6px;text-decoration:none;font-weight:bold;font-size:.95rem;margin-right:.5rem}
+.btn-primary{background:#1565c0;color:white}
+.btn-primary:hover{background:#0d47a1}
+.btn-back{background:#eee;color:#555}
+</style>
+</head>
+<body>
+<nav>
+  <a class="brand" th:href="@{/}">💼 JobPortal</a>
+  <div>
+    <a th:href="@{/jobs}">← All Jobs</a>
+    <a th:href="@{/login}">Login to Apply</a>
+  </div>
+</nav>
+<div class="container">
+  <div class="card">
+    <div class="job-header">
+      <h1 th:text="${job.title}"></h1>
+      <div class="company" th:text="${job.companyName}"></div>
+    </div>
+    <div class="meta-grid">
+      <div class="meta-item"><span class="label">Location</span><span class="value" th:text="${job.location}"></span></div>
+      <div class="meta-item"><span class="label">Job Type</span><span class="value" th:text="${job.jobType}"></span></div>
+      <div class="meta-item"><span class="label">Category</span><span class="value" th:text="${job.category}"></span></div>
+      <div class="meta-item"><span class="label">Experience</span><span class="value" th:text="${job.experienceRequired}"></span></div>
+      <div class="meta-item"><span class="label">Salary</span><span class="value" th:text="${job.salaryRange ?: 'Not disclosed'}"></span></div>
+      <div class="meta-item"><span class="label">Last Date</span><span class="value" th:text="${job.lastDateToApply}"></span></div>
+    </div>
+
+    <div class="section-title">Job Description</div>
+    <div class="description" th:text="${job.description}"></div>
+
+    <div class="section-title">Skills Required</div>
+    <div class="skills">
+      <span class="skill-tag" th:each="skill : ${#strings.arraySplit(job.skillsRequired, ',')}" th:text="${#strings.trim(skill)}"></span>
+    </div>
+
+    <div style="margin-top:2rem">
+      <a th:href="@{/login}" class="btn btn-primary">Login to Apply</a>
+      <a th:href="@{/jobs}" class="btn btn-back">← Back to Jobs</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/><title>Company Profile - JobPortal</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:#f5f7fa;display:flex;min-height:100vh}
+.sidebar{width:220px;background:#0d47a1;color:white;padding:1.5rem 0;position:fixed;height:100vh}
+.sidebar .logo{padding:0 1.5rem 1.5rem;font-size:1.1rem;font-weight:bold;border-bottom:1px solid rgba(255,255,255,.2)}
+.sidebar nav a{display:block;padding:.75rem 1.5rem;color:#bbdefb;text-decoration:none;font-size:.9rem}
+.sidebar nav a:hover,.sidebar nav a.active{background:rgba(255,255,255,.15);color:white}
+.main{margin-left:220px;padding:2rem;flex:1}
+h1{color:#0d47a1;margin-bottom:1.5rem}
+.card{background:white;border-radius:10px;padding:2rem;box-shadow:0 2px 10px rgba(0,0,0,.09);max-width:650px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form-group{margin-bottom:1.2rem}
+label{display:block;font-weight:600;margin-bottom:.3rem;font-size:.88rem;color:#444}
+input,select,textarea{width:100%;padding:.6rem .8rem;border:1px solid #ddd;border-radius:6px;font-size:.93rem;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#0d47a1}
+textarea{resize:vertical;min-height:80px}
+.btn{padding:.75rem 1.5rem;background:#0d47a1;color:white;border:none;border-radius:6px;font-size:.95rem;font-weight:bold;cursor:pointer}
+.alert-success{background:#e8f5e9;color:#2e7d32;padding:.75rem;border-radius:6px;margin-bottom:1rem}
+</style>
+</head>
+<body>
+<div class="sidebar">
+  <div class="logo">💼 JobPortal</div>
+  <nav>
+    <a th:href="@{/employer/dashboard}">🏠 Dashboard</a>
+    <a th:href="@{/employer/jobs}">📋 My Jobs</a>
+    <a th:href="@{/employer/jobs/add}">➕ Post Job</a>
+    <a th:href="@{/employer/profile}" class="active">🏢 Company Profile</a>
+    <a th:href="@{/logout}" style="margin-top:2rem;border-top:1px solid rgba(255,255,255,.2);padding-top:.75rem">🚪 Logout</a>
+  </nav>
+</div>
+<div class="main">
+  <h1>🏢 Company Profile</h1>
+  <div th:if="${success}" class="alert-success" th:text="${success}"></div>
+  <div class="card">
+    <form th:action="@{/employer/profile/update}" th:object="${employer}" method="post">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Contact Person</label>
+          <input type="text" th:field="*{fullName}"/>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" th:field="*{email}" readonly style="background:#f5f5f5"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Company Name</label>
+          <input type="text" th:field="*{companyName}"/>
+        </div>
+        <div class="form-group">
+          <label>Industry</label>
+          <select th:field="*{industry}">
+            <option value="">-- Select --</option>
+            <option value="Information Technology">Information Technology</option>
+            <option value="Finance">Finance</option>
+            <option value="Healthcare">Healthcare</option>
+            <option value="Consulting">Consulting</option>
+            <option value="Manufacturing">Manufacturing</option>
+            <option value="Education">Education</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="text" th:field="*{phone}"/>
+        </div>
+        <div class="form-group">
+          <label>Location</label>
+          <input type="text" th:field="*{location}"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Website</label>
+        <input type="text" th:field="*{website}" placeholder="https://yourcompany.com"/>
+      </div>
+      <div class="form-group">
+        <label>Company Description</label>
+        <textarea th:field="*{companyDescription}"></textarea>
+      </div>
+      <button type="submit" class="btn">💾 Save Profile</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>

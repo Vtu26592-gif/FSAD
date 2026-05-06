@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/><title>Browse Jobs - JobPortal</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:#f5f7fa}
+nav{background:#1565c0;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center}
+nav .brand{color:white;font-size:1.2rem;font-weight:bold;text-decoration:none}
+nav a{color:#bbdefb;text-decoration:none;margin-left:1rem;font-size:.9rem}
+nav a:hover{color:white}
+.page-header{background:#1565c0;color:white;padding:2rem;text-align:center}
+.page-header h1{font-size:2rem;margin-bottom:.5rem}
+.container{max-width:1100px;margin:0 auto;padding:1.5rem 1rem;display:grid;grid-template-columns:260px 1fr;gap:1.5rem}
+.filters{background:white;padding:1.5rem;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.08);height:fit-content}
+.filters h3{color:#1565c0;margin-bottom:1rem;font-size:1rem;text-transform:uppercase;letter-spacing:.5px}
+.filter-group{margin-bottom:1rem}
+.filter-group label{display:block;font-weight:600;font-size:.85rem;color:#555;margin-bottom:.3rem}
+.filter-group select,.filter-group input{width:100%;padding:.5rem .7rem;border:1px solid #ddd;border-radius:6px;font-size:.88rem}
+.btn-filter{width:100%;padding:.65rem;background:#1565c0;color:white;border:none;border-radius:6px;font-weight:bold;cursor:pointer;margin-top:.5rem}
+.btn-reset{width:100%;padding:.5rem;background:#eee;color:#555;border:none;border-radius:6px;cursor:pointer;margin-top:.5rem;font-size:.88rem}
+.job-list{}
+.job-count{color:#666;margin-bottom:1rem;font-size:.9rem}
+.job-card{background:white;border-radius:10px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.08);margin-bottom:1rem;display:flex;justify-content:space-between;align-items:flex-start;border-left:4px solid #1565c0}
+.job-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.12)}
+.job-info h3{color:#1565c0;margin-bottom:.3rem}
+.job-info .company{font-weight:600;color:#333;font-size:.95rem}
+.job-meta{display:flex;flex-wrap:wrap;gap:.5rem;margin:.6rem 0}
+.meta-item{font-size:.8rem;color:#666;display:flex;align-items:center;gap:.2rem}
+.tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem}
+.tag{background:#e3f2fd;color:#1565c0;padding:.18rem .55rem;border-radius:20px;font-size:.75rem}
+.tag-type{background:#fce4ec;color:#880e4f}
+.tag-exp{background:#e8f5e9;color:#2e7d32}
+.job-actions{display:flex;flex-direction:column;gap:.5rem;align-items:flex-end;min-width:120px}
+.btn{display:inline-block;padding:.5rem 1rem;border-radius:6px;text-decoration:none;font-weight:bold;font-size:.83rem;text-align:center}
+.btn-primary{background:#1565c0;color:white}
+.btn-outline{border:1px solid #1565c0;color:#1565c0;background:white}
+.salary{font-weight:600;color:#2e7d32;font-size:.88rem}
+.no-results{text-align:center;padding:3rem;color:#999;background:white;border-radius:10px}
+</style>
+</head>
+<body>
+<nav>
+  <a class="brand" th:href="@{/}">💼 JobPortal</a>
+  <div>
+    <a th:href="@{/jobs}">Browse Jobs</a>
+    <a th:href="@{/login}">Login</a>
+    <a th:href="@{/register}" style="background:#ff6f00;padding:.3rem .8rem;border-radius:5px;color:white;">Register</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <h1>Browse Jobs</h1>
+  <p>Find the perfect opportunity for your career</p>
+</div>
+
+<div class="container">
+  <!-- Filters sidebar -->
+  <aside class="filters">
+    <h3>🔍 Filter Jobs</h3>
+    <form th:action="@{/jobs}" method="get">
+      <div class="filter-group">
+        <label>Search Keyword</label>
+        <input type="text" name="keyword" th:value="${keyword}" placeholder="Title, skill, company..."/>
+      </div>
+      <div class="filter-group">
+        <label>Category</label>
+        <select name="category">
+          <option value="">All Categories</option>
+          <option value="IT" th:selected="${category == 'IT'}">Information Technology</option>
+          <option value="Finance" th:selected="${category == 'Finance'}">Finance</option>
+          <option value="Marketing" th:selected="${category == 'Marketing'}">Marketing</option>
+          <option value="HR" th:selected="${category == 'HR'}">Human Resources</option>
+          <option value="Healthcare" th:selected="${category == 'Healthcare'}">Healthcare</option>
+          <option value="Education" th:selected="${category == 'Education'}">Education</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Location</label>
+        <input type="text" name="location" th:value="${location}" placeholder="City or Remote"/>
+      </div>
+      <div class="filter-group">
+        <label>Experience</label>
+        <select name="experience">
+          <option value="">Any Experience</option>
+          <option value="Fresher" th:selected="${experience == 'Fresher'}">Fresher</option>
+          <option value="1-2 years" th:selected="${experience == '1-2 years'}">1-2 years</option>
+          <option value="3-5 years" th:selected="${experience == '3-5 years'}">3-5 years</option>
+          <option value="5+ years" th:selected="${experience == '5+ years'}">5+ years</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-filter">Apply Filters</button>
+      <a th:href="@{/jobs}"><button type="button" class="btn-reset">Reset</button></a>
+    </form>
+  </aside>
+
+  <!-- Job listings -->
+  <div class="job-list">
+    <div class="job-count" th:text="${#lists.size(jobs)} + ' jobs found'"></div>
+
+    <div th:each="job : ${jobs}" class="job-card">
+      <div class="job-info">
+        <h3 th:text="${job.title}"></h3>
+        <div class="company" th:text="${job.companyName}"></div>
+        <div class="job-meta">
+          <span class="meta-item">📍 <span th:text="${job.location}"></span></span>
+          <span class="meta-item">💰 <span class="salary" th:text="${job.salaryRange ?: 'Not disclosed'}"></span></span>
+          <span class="meta-item">📅 Apply by <span th:text="${job.lastDateToApply}"></span></span>
+        </div>
+        <div class="tags">
+          <span class="tag tag-type" th:text="${job.jobType}"></span>
+          <span class="tag tag-exp" th:text="${job.experienceRequired}"></span>
+          <span class="tag" th:text="${job.category}"></span>
+        </div>
+      </div>
+      <div class="job-actions">
+        <a th:href="@{/login}" class="btn btn-primary">Apply Now</a>
+        <a th:href="@{/jobs/{id}(id=${job.id})}" class="btn btn-outline">View Details</a>
+      </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(jobs)}" class="no-results">
+      <p style="font-size:1.2rem">🔍 No jobs found</p>
+      <p style="margin-top:.5rem">Try different filters or keywords</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>
